@@ -1,0 +1,299 @@
+<html>
+  <head>
+    <title>Kaleidoscope Studio</title>
+    <script type="text/javascript">
+      var imgLoaded = false;
+      var ctx, img;
+
+      /* ---------------------------------------------
+      Loads a new kaleidoscope (Code and idea from http://www.experiencebureau.com/toys/kaleidoscope/ )
+      ------------------------------------------------*/
+      function loadNewKaleidoscope() {
+        var canvas = document.getElementById("canvas");
+        window.ctx = canvas.getContext("2d");
+        window.img = document.getElementById("im");
+        document.onmousemove = onDocMouseMove;
+        drawKaleidoscope(window.ctx, window.img, 0, 0);
+      }
+
+      /* ---------------------------------------------
+     Draws a kaleidoscope (Code and idea from http://www.experiencebureau.com/toys/kaleidoscope/ )
+     ------------------------------------------------*/
+      function drawKaleidoscope(ctx, img, imgX, imgY) {
+        try {
+          var sqSide = 250;
+          var sqDiag = Math.sqrt(2 * sqSide * sqSide);
+          var maskSide = 500;
+          if (img.height < img.width) {
+            maskSide = Math.abs(img.height - sqDiag);
+          } else {
+            maskSide = Math.abs(img.width - sqDiag);
+          }
+          var c = 250;
+          ctx.clearRect(0, 0, 500, 500);
+          //7 (1)
+          ctx.save();
+          ctx.translate(c, c);
+          ctx.rotate(-90 * (Math.PI / 180));
+          ctx.scale(-1, -1);
+          ctx.drawImage(
+            img,
+            imgX,
+            imgY,
+            maskSide,
+            maskSide,
+            0,
+            0,
+            sqSide,
+            sqSide
+          );
+          ctx.restore();
+          //2 (4)
+          ctx.save();
+          ctx.translate(c, c);
+          ctx.rotate(-90 * (Math.PI / 180));
+          ctx.scale(1, -1);
+          ctx.drawImage(
+            img,
+            imgX,
+            imgY,
+            maskSide,
+            maskSide,
+            0,
+            0,
+            sqSide,
+            sqSide
+          );
+          ctx.restore();
+          //3 (5)
+          ctx.save();
+          ctx.translate(c, c);
+          ctx.rotate(-90 * (Math.PI / 180));
+          ctx.scale(1, 1);
+          ctx.drawImage(
+            img,
+            imgX,
+            imgY,
+            maskSide,
+            maskSide,
+            0,
+            0,
+            sqSide,
+            sqSide
+          );
+          ctx.restore();
+          //8
+          ctx.save();
+          ctx.translate(c, c);
+          ctx.rotate(-90 * (Math.PI / 180));
+          ctx.scale(-1, 1);
+          ctx.drawImage(
+            img,
+            imgX,
+            imgY,
+            maskSide,
+            maskSide,
+            0,
+            0,
+            sqSide,
+            sqSide
+          );
+          ctx.restore();
+          //1
+          ctx.save();
+          ctx.moveTo(c, c);
+          ctx.lineTo(c - sqSide, c);
+          ctx.lineTo(c - sqSide, c - sqSide);
+          ctx.lineTo(c, c);
+          ctx.clip();
+          ctx.translate(c, c);
+          ctx.scale(-1, -1);
+          ctx.drawImage(
+            img,
+            imgX,
+            imgY,
+            maskSide,
+            maskSide,
+            0,
+            0,
+            sqSide,
+            sqSide
+          );
+          ctx.restore();
+          //4
+          ctx.save();
+          ctx.moveTo(c, c);
+          ctx.lineTo(c + sqSide, c - sqSide);
+          ctx.lineTo(c + sqSide, c);
+          ctx.lineTo(c, c);
+          ctx.clip();
+          ctx.translate(c, c);
+          ctx.scale(1, -1);
+          ctx.drawImage(
+            img,
+            imgX,
+            imgY,
+            maskSide,
+            maskSide,
+            0,
+            0,
+            sqSide,
+            sqSide
+          );
+          ctx.restore();
+          //5
+          ctx.save();
+          ctx.moveTo(c, c);
+          ctx.lineTo(c + sqSide, c);
+          ctx.lineTo(c + sqSide, c + sqSide);
+          ctx.lineTo(c, c);
+          ctx.clip();
+          ctx.translate(c, c);
+          ctx.scale(1, 1);
+          ctx.drawImage(
+            img,
+            imgX,
+            imgY,
+            maskSide,
+            maskSide,
+            0,
+            0,
+            sqSide,
+            sqSide
+          );
+          ctx.restore();
+          //8
+          ctx.save();
+          ctx.moveTo(c, c);
+          ctx.lineTo(c - sqSide, c + sqSide);
+          ctx.lineTo(c - sqSide, c);
+          ctx.lineTo(c, c);
+          ctx.clip();
+          ctx.translate(c, c);
+          ctx.scale(-1, 1);
+          ctx.drawImage(
+            img,
+            imgX,
+            imgY,
+            maskSide,
+            maskSide,
+            0,
+            0,
+            sqSide,
+            sqSide
+          );
+          ctx.restore();
+        } catch (err) {
+          img = "";
+
+          ctx.clearRect(0, 0, 500, 500);
+        }
+      }
+
+      function onDocMouseMove(e) {
+        var ev = e ? e : window.event;
+        mouseX = ev.clientX - document.getElementById("canvas").offsetLeft;
+        mouseY = ev.clientY - document.getElementById("canvas").offsetTop;
+        drawKaleidoscope(window.ctx, window.img, mouseX / 2, mouseY / 2);
+      }
+
+      function drawRandom() {
+        var x = Math.floor(Math.random() * 1000);
+        var y = Math.floor(Math.random() * 1000);
+        drawKaleidoscope(window.ctx, window.img, x / 2, y / 2);
+      }
+
+      // setInterval(drawRandom, 1000);
+
+      function dropHandler(ev) {
+        console.log("File(s) dropped");
+
+        // Prevent default behavior (Prevent file from being opened)
+        ev.preventDefault();
+
+        if (ev.dataTransfer.items) {
+          // Use DataTransferItemList interface to access the file(s)
+          for (var i = 0; i < ev.dataTransfer.items.length; i++) {
+            // If dropped items aren't files, reject them
+            if (ev.dataTransfer.items[i].kind === "file") {
+              var file = ev.dataTransfer.items[i].getAsFile();
+              // debugger;
+              const img = window.img;
+              img.classList.add("obj");
+              img.file = file;
+              document.body.appendChild(img); // Assuming that "preview" is the div output where the content will be displayed.
+
+              const reader = new FileReader();
+              reader.onload = (function (aImg) {
+                return function (e) {
+                  aImg.src = e.target.result;
+                  setTimeout(() => drawRandom(), 300);
+                };
+              })(img);
+              reader.readAsDataURL(file);
+            }
+          }
+        } else {
+          // Use DataTransfer interface to access the file(s)
+          for (var i = 0; i < ev.dataTransfer.files.length; i++) {
+            console.log(
+              "... file[" +
+                i +
+                "].name = fdsfds" +
+                ev.dataTransfer.files[i].name
+            );
+          }
+        }
+      }
+
+      function dragOverHandler(ev) {
+        console.log("File(s) in drop zone");
+
+        // Prevent default behavior (Prevent file from being opened)
+        ev.preventDefault();
+      }
+
+      function onDocMouseMove(e) {
+        var ev = e ? e : window.event;
+        if (ev.ctrlKey) {
+          var canvas = document.getElementById("canvas");
+          mouseX = ev.clientX - canvas.offsetLeft;
+          mouseY = ev.clientY - canvas.offsetTop;
+          drawKaleidoscope(window.ctx, window.img, mouseX / 2, mouseY / 2);
+        }
+      }
+    </script>
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+      }
+      #drop_zone {
+        border: 5px solid blue;
+        width: 200px;
+        height: 100px;
+      }
+    </style>
+  </head>
+  <body onload="loadNewKaleidoscope();">
+    <h1>Kaleidoscope Studio</h1>
+    <ul>
+      <li>Drag image on canvas</li>
+      <li><button onClick="drawRandom()">Next</button>for random</li>
+      <li>hold control to change with mouse</li>
+    </ul>
+    <canvas
+      id="canvas"
+      width="500"
+      height="500"
+      ondrop="dropHandler(event);"
+      ondragover="dragOverHandler(event);"
+    ></canvas>
+    <img
+      src="/assets/canva2342342e32s.png"
+      style="display: none;"
+      onclick="renderASCII()"
+      id="im"
+    />
+  </body>
+</html>
