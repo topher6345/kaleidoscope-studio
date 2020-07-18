@@ -1,13 +1,14 @@
 <html>
   <head>
+    <meta charset="utf-8" />
     <title>Kaleidoscope Studio</title>
     <script type="text/javascript">
       var imgLoaded = false;
       var ctx, img;
 
       /* ---------------------------------------------
-      Loads a new kaleidoscope (Code and idea from http://www.experiencebureau.com/toys/kaleidoscope/ )
-      ------------------------------------------------*/
+            Loads a new kaleidoscope (Code and idea from http://www.experiencebureau.com/toys/kaleidoscope/ )
+            ------------------------------------------------*/
       function loadNewKaleidoscope() {
         var canvas = document.getElementById("canvas");
         window.ctx = canvas.getContext("2d");
@@ -17,8 +18,8 @@
       }
 
       /* ---------------------------------------------
-     Draws a kaleidoscope (Code and idea from http://www.experiencebureau.com/toys/kaleidoscope/ )
-     ------------------------------------------------*/
+           Draws a kaleidoscope (Code and idea from http://www.experiencebureau.com/toys/kaleidoscope/ )
+           ------------------------------------------------*/
       function drawKaleidoscope(ctx, img, imgX, imgY) {
         try {
           var sqSide = 250;
@@ -262,6 +263,23 @@
           drawKaleidoscope(window.ctx, window.img, mouseX / 2, mouseY / 2);
         }
       }
+      function screenCap() {
+        debugger;
+        const img = new Image();
+        const dataUrl = document
+          .getElementById("canvas")
+          .toDataURL("image/png");
+        const imgName = "CellularAnimationStudio" + Date.now();
+        img.src = dataUrl;
+        img.alt = imgName;
+        img.title = "Click to download";
+
+        const a = document.createElement("a");
+        a.href = dataUrl;
+        a.append(img);
+        a.download = "imgName" + "png";
+        document.querySelector("body").append(a);
+      }
     </script>
     <style>
       body {
@@ -281,6 +299,7 @@
       <li>Drag image on canvas</li>
       <li><button onClick="drawRandom()">Next</button>for random</li>
       <li>hold control to change with mouse</li>
+      <li><button onClick="screenCap()">📷</button></li>
     </ul>
     <canvas
       id="canvas"
