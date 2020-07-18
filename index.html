@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>CANVAS KALEIDOSCOPE DEMO</title>
+    <title>Kaleidoscope Studio</title>
     <script type="text/javascript">
       var imgLoaded = false;
       var ctx, img;
@@ -12,7 +12,7 @@
         var canvas = document.getElementById("canvas");
         window.ctx = canvas.getContext("2d");
         window.img = document.getElementById("im");
-        // document.onmousemove = onDocMouseMove;
+        document.onmousemove = onDocMouseMove;
         drawKaleidoscope(window.ctx, window.img, 0, 0);
       }
 
@@ -252,6 +252,16 @@
         // Prevent default behavior (Prevent file from being opened)
         ev.preventDefault();
       }
+
+      function onDocMouseMove(e) {
+        var ev = e ? e : window.event;
+        if (ev.ctrlKey) {
+          var canvas = document.getElementById("canvas");
+          mouseX = ev.clientX - canvas.offsetLeft;
+          mouseY = ev.clientY - canvas.offsetTop;
+          drawKaleidoscope(window.ctx, window.img, mouseX / 2, mouseY / 2);
+        }
+      }
     </script>
     <style>
       body {
@@ -266,15 +276,20 @@
     </style>
   </head>
   <body onload="loadNewKaleidoscope();">
-    <div
-      id="drop_zone"
+    <h1>Kaleidoscope Studio</h1>
+    <ul>
+      <li>Drag image on canvas</li>
+      <li><button onClick="drawRandom()">Next</button>for random</li>
+      <li>hold control to change with mouse</li>
+      
+    </ul>
+    <canvas
+      id="canvas"
+      width="500"
+      height="500"
       ondrop="dropHandler(event);"
       ondragover="dragOverHandler(event);"
-    >
-      <p>Drag one or more files to this Drop Zone ...</p>
-    </div>
-    <button onClick="drawRandom()">Next</button>
-    <canvas id="canvas" width="500" height="500"></canvas>
+    ></canvas>
     <img
       src="/assets/canva2342342e32s.png"
       style="display: none;"
