@@ -204,15 +204,75 @@
       }
 
       // setInterval(drawRandom, 1000);
+
+      function dropHandler(ev) {
+        console.log("File(s) dropped");
+
+        // Prevent default behavior (Prevent file from being opened)
+        ev.preventDefault();
+
+        if (ev.dataTransfer.items) {
+          // Use DataTransferItemList interface to access the file(s)
+          for (var i = 0; i < ev.dataTransfer.items.length; i++) {
+            // If dropped items aren't files, reject them
+            if (ev.dataTransfer.items[i].kind === "file") {
+              var file = ev.dataTransfer.items[i].getAsFile();
+              // debugger;
+              const img = window.img;
+              img.classList.add("obj");
+              img.file = file;
+              document.body.appendChild(img); // Assuming that "preview" is the div output where the content will be displayed.
+
+              const reader = new FileReader();
+              reader.onload = (function (aImg) {
+                return function (e) {
+                  aImg.src = e.target.result;
+                  setTimeout(() => drawRandom(), 300);
+                };
+              })(img);
+              reader.readAsDataURL(file);
+            }
+          }
+        } else {
+          // Use DataTransfer interface to access the file(s)
+          for (var i = 0; i < ev.dataTransfer.files.length; i++) {
+            console.log(
+              "... file[" +
+                i +
+                "].name = fdsfds" +
+                ev.dataTransfer.files[i].name
+            );
+          }
+        }
+      }
+
+      function dragOverHandler(ev) {
+        console.log("File(s) in drop zone");
+
+        // Prevent default behavior (Prevent file from being opened)
+        ev.preventDefault();
+      }
     </script>
     <style>
       body {
         padding: 0;
         margin: 0;
       }
+      #drop_zone {
+        border: 5px solid blue;
+        width: 200px;
+        height: 100px;
+      }
     </style>
   </head>
   <body onload="loadNewKaleidoscope();">
+    <div
+      id="drop_zone"
+      ondrop="dropHandler(event);"
+      ondragover="dragOverHandler(event);"
+    >
+      <p>Drag one or more files to this Drop Zone ...</p>
+    </div>
     <button onClick="drawRandom()">Next</button>
     <canvas id="canvas" width="500" height="500"></canvas>
     <img
