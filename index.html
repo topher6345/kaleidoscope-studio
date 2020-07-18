@@ -1,13 +1,14 @@
 <html>
   <head>
+    <meta charset="utf-8" />
     <title>Kaleidoscope Studio</title>
     <script type="text/javascript">
       var imgLoaded = false;
       var ctx, img;
 
       /* ---------------------------------------------
-      Loads a new kaleidoscope (Code and idea from http://www.experiencebureau.com/toys/kaleidoscope/ )
-      ------------------------------------------------*/
+            Loads a new kaleidoscope (Code and idea from http://www.experiencebureau.com/toys/kaleidoscope/ )
+            ------------------------------------------------*/
       function loadNewKaleidoscope() {
         var canvas = document.getElementById("canvas");
         window.ctx = canvas.getContext("2d");
@@ -17,8 +18,10 @@
       }
 
       /* ---------------------------------------------
-     Draws a kaleidoscope (Code and idea from http://www.experiencebureau.com/toys/kaleidoscope/ )
-     ------------------------------------------------*/
+           Draws a kaleidoscope (Code and idea from http://www.experiencebureau.com/toys/kaleidoscope/ )
+           ------------------------------------------------*/
+
+      var WIDTH = 500;
       function drawKaleidoscope(ctx, img, imgX, imgY) {
         try {
           var sqSide = 250;
@@ -262,38 +265,83 @@
           drawKaleidoscope(window.ctx, window.img, mouseX / 2, mouseY / 2);
         }
       }
+      function screenCap() {
+        debugger;
+        const img = new Image();
+        const dataUrl = document
+          .getElementById("canvas")
+          .toDataURL("image/png");
+        const imgName = "KaleidoscopeStudio" + Date.now().toString();
+        img.src = dataUrl;
+        img.alt = imgName;
+        img.title = "Click to download";
+        const a = document.createElement("a");
+        a.href = dataUrl;
+        a.append(img);
+        a.download = imgName + ".png";
+        document.getElementById("captures").prepend(a);
+      }
     </script>
     <style>
       body {
         padding: 0;
         margin: 0;
+        display: flex;
+        justify-content: center;
       }
-      #drop_zone {
-        border: 5px solid blue;
-        width: 200px;
-        height: 100px;
+      canvas,
+      img {
+        border: 2px solid black;
+        display: block;
+      }
+
+      #captures img {
+        margin: 1em 0;
+        border-top: 7px solid black;
+        border-bottom: 7px solid black;
       }
     </style>
   </head>
   <body onload="loadNewKaleidoscope();">
-    <h1>Kaleidoscope Studio</h1>
-    <ul>
-      <li>Drag image on canvas</li>
-      <li><button onClick="drawRandom()">Next</button>for random</li>
-      <li>hold control to change with mouse</li>
-    </ul>
-    <canvas
-      id="canvas"
-      width="500"
-      height="500"
-      ondrop="dropHandler(event);"
-      ondragover="dragOverHandler(event);"
-    ></canvas>
-    <img
-      src="https://topher6345.github.io/kaleidoscope-studio/assets/canva2342342e32s.png"
-      style="display: none;"
-      onclick="renderASCII()"
-      id="im"
-    />
+    <div id="root">
+      <h1>Kaleidoscope Studio</h1>
+      <ul>
+        <li>Drag image on canvas</li>
+        <li><button onClick="drawRandom();">Next</button>for random</li>
+        <li><input id="colorPicker" type="color" />Set Background color</li>
+
+        <li>hold control to change with mouse</li>
+        <li><button onClick="screenCap();">📷</button></li>
+      </ul>
+      <canvas
+        id="canvas"
+        width="500"
+        height="500"
+        ondrop="dropHandler(event);"
+        ondragover="dragOverHandler(event);"
+      ></canvas>
+      <img
+        src="assets/canva2342342e32s.png"
+        style="display: none;"
+        onclick="renderASCII()"
+        id="im"
+      />
+      <div id="captures"></div>
+    </div>
+    <script>
+      document.querySelector(
+        "body"
+      ).style.backgroundColor = window.localStorage.getItem("bgColor");
+      document
+        .getElementById("colorPicker")
+        .addEventListener("input", function (e) {
+          document.querySelector("body").style.backgroundColor = e.target.value;
+        });
+      document
+        .getElementById("colorPicker")
+        .addEventListener("input", function (e) {
+          window.localStorage.setItem("bgColor", e.target.value);
+        });
+    </script>
   </body>
 </html>
