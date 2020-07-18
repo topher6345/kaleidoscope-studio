@@ -197,11 +197,13 @@
         drawKaleidoscope(window.ctx, window.img, mouseX / 2, mouseY / 2);
       }
 
-      setInterval(() => {
+      function drawRandom() {
         var x = Math.floor(Math.random() * 1000);
         var y = Math.floor(Math.random() * 1000);
         drawKaleidoscope(window.ctx, window.img, x / 2, y / 2);
-      }, 1000);
+      }
+
+      // setInterval(drawRandom, 1000);
     </script>
     <style>
       body {
@@ -211,6 +213,7 @@
     </style>
   </head>
   <body onload="loadNewKaleidoscope();">
+    <button onClick="drawRandom()">Next</button>
     <canvas id="canvas" width="500" height="500"></canvas>
     <img
       src="/assets/canva2342342e32s.png"
