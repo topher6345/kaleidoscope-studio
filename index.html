@@ -279,8 +279,6 @@
         a.download = imgName + ".png";
         document.getElementById("captures").prepend(a);
       }
-
-      
     </script>
     <style>
       body {
@@ -319,10 +317,18 @@
     />
     <div id="captures"></div>
     <script>
+      document.querySelector(
+        "body"
+      ).style.backgroundColor = window.localStorage.getItem("bgColor");
       document
         .getElementById("colorPicker")
         .addEventListener("input", function (e) {
           document.querySelector("body").style.backgroundColor = e.target.value;
+        });
+      document
+        .getElementById("colorPicker")
+        .addEventListener("input", function (e) {
+          window.localStorage.setItem("bgColor", e.target.value);
         });
     </script>
   </body>
